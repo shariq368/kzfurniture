@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-premium: #C8A24A;
+  --color-beige-warm: #E8DDCF;
+  --color-black-deep: #0B0B0B;
+  --color-gray-muted: #A1A1A1;
+  --font-serif-luxury: "Playfair Display", Georgia, serif;
+  --font-sans-modern: "Plus Jakarta Sans", "Inter", sans-serif;
+}
+
+/* Base custom styles to support high-end magazine styling and animations */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #0B0B0B;
+    color: #FFFFFF;
+    font-family: var(--font-sans-modern);
+  }
+  
+  body {
+    background-color: #0B0B0B;
+    overflow-x: hidden;
+    margin: 0;
+  }
+
+  /* Custom styling for editorial underlines and gold accent typography */
+  .gold-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .gold-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background-color: #C8A24A;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+  .gold-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+}
+
+/* Ambient glows */
+.bg-spotlight {
+  background: radial-gradient(circle 800px at 50% -200px, rgba(200, 162, 74, 0.15), transparent 80%);
+}
+
+.bg-spotlight-bottom {
+  background: radial-gradient(circle 600px at 50% 120%, rgba(200, 162, 74, 0.12), transparent 80%);
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(11, 11, 11, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 162, 74, 0.15);
+}
+
+.glass-nav {
+  background: rgba(11, 11, 11, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
