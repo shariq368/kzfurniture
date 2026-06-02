@@ -699,9 +699,7 @@ export default function App() {
           <div className="space-y-4">
             <a href="#" className="flex items-end gap-3 select-none">
               <img src="/kzlogo.png" alt="K & Z Furniture & Interior" className="h-16 w-auto object-contain" />
-              <span className="text-[11px] tracking-[0.25em] text-gold-premium font-sans-modern font-bold uppercase opacity-95 pb-1.5 whitespace-nowrap">
-                Furniture & Interior
-              </span>
+
             </a>
             <p className="text-xs text-gray-muted leading-relaxed font-light">
               Bespoke luxury interior designs, curated furniture showrooms, and custom woodwork built to elevate modern spaces.
