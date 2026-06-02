@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Lightbox from './components/Lightbox';
 import Home from './pages/Home';
 import Collections from './pages/Collections';
+import Login from './pages/Login';
 
 // Image assets mapping from public/picture directory
 const IMGS = {
@@ -66,10 +67,13 @@ const DEFAULT_COLLECTIONS: Category[] = [
 
 export default function App() {
   // Hash-based simple router
-  const [view, setView] = useState<'home' | 'collections'>(() => {
+  const [view, setView] = useState<'home' | 'collections' | 'login'>(() => {
     const hash = window.location.hash;
     if (hash === '#/collections' || hash === '#collections') {
       return 'collections';
+    }
+    if (hash === '#/login' || hash === '#login') {
+      return 'login';
     }
     return 'home';
   });
@@ -90,12 +94,25 @@ export default function App() {
   // Reusable Image Preview Lightbox State
   const [activePreviewImg, setActivePreviewImg] = useState<string | null>(null);
 
+  // Authentication State
+  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
+    return localStorage.getItem('kz_admin_logged_in') === 'true';
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem('kz_admin_logged_in');
+    setIsAdmin(false);
+    window.location.hash = '#/';
+  };
+
   // Sync hash routing
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash === '#/collections' || hash === '#collections') {
         setView('collections');
+      } else if (hash === '#/login' || hash === '#login') {
+        setView('login');
       } else {
         setView('home');
       }
@@ -118,6 +135,7 @@ export default function App() {
     description: string;
     mainImage: string;
   }) => {
+    if (!isAdmin) return;
     const id = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now();
     const newCol: Category = {
       id,
@@ -134,6 +152,7 @@ export default function App() {
     id: string,
     data: { name: string; subtitle: string; description: string; mainImage: string }
   ) => {
+    if (!isAdmin) return;
     setCollections((prev) =>
       prev.map((c) => {
         if (c.id === id) {
@@ -156,10 +175,12 @@ export default function App() {
   };
 
   const handleDeleteCollection = (id: string) => {
+    if (!isAdmin) return;
     setCollections((prev) => prev.filter((c) => c.id !== id));
   };
 
   const handleAddImage = (colId: string, imageUrl: string) => {
+    if (!isAdmin) return;
     setCollections((prev) =>
       prev.map((c) => {
         if (c.id === colId) {
@@ -177,6 +198,7 @@ export default function App() {
   };
 
   const handleDeleteImage = (colId: string, imageUrl: string) => {
+    if (!isAdmin) return;
     setCollections((prev) =>
       prev.map((c) => {
         if (c.id === colId) {
@@ -193,6 +215,7 @@ export default function App() {
   };
 
   const handleSetCoverImage = (colId: string, imageUrl: string) => {
+    if (!isAdmin) return;
     setCollections((prev) =>
       prev.map((c) => {
         if (c.id === colId) {
@@ -216,14 +239,17 @@ export default function App() {
       </div>
 
       {/* Shared Header Navigation */}
-      <Header view={view} />
+      <Header view={view} isAdmin={isAdmin} onLogout={handleLogout} />
 
       {/* Routed Main View */}
       {view === 'home' ? (
         <Home onPreviewImage={setActivePreviewImg} />
+      ) : view === 'login' ? (
+        <Login onLoginSuccess={() => setIsAdmin(true)} />
       ) : (
         <Collections
           collections={collections}
+          isAdmin={isAdmin}
           onAddCollection={handleAddCollection}
           onEditCollection={handleEditCollection}
           onDeleteCollection={handleDeleteCollection}

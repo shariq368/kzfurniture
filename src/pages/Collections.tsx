@@ -16,6 +16,7 @@ import AddPhotoModal from '../components/AddPhotoModal';
 
 interface CollectionsProps {
   collections: Category[];
+  isAdmin: boolean;
   onAddCollection: (data: { name: string; subtitle: string; description: string; mainImage: string }) => void;
   onEditCollection: (id: string, data: { name: string; subtitle: string; description: string; mainImage: string }) => void;
   onDeleteCollection: (id: string) => void;
@@ -27,6 +28,7 @@ interface CollectionsProps {
 
 export default function Collections({
   collections,
+  isAdmin,
   onAddCollection,
   onEditCollection,
   onDeleteCollection,
@@ -120,7 +122,9 @@ export default function Collections({
             Curated Spaces & Galleries
           </h1>
           <p className="text-sm md:text-base text-gray-muted max-w-2xl font-light leading-relaxed">
-            Create, rename, and configure our premium showroom collections. Manage details, upload high-quality photography, and define branding cover layouts in real time.
+            {isAdmin 
+              ? 'Create, rename, and configure our premium showroom collections. Manage details, upload high-quality photography, and define branding cover layouts in real time.'
+              : 'Browse our curated galleries of premium solid wood craftsmanship and custom interior furniture.'}
           </p>
         </div>
 
@@ -135,15 +139,19 @@ export default function Collections({
                 No Collections Curated
               </h3>
               <p className="text-sm text-gray-muted max-w-md font-light leading-relaxed">
-                Our portfolio is currently empty. Get started by designing your first custom furniture collection showcase.
+                {isAdmin 
+                  ? 'Our portfolio is currently empty. Get started by designing your first custom furniture collection showcase.'
+                  : 'Our showroom portfolio is currently empty. Please check back soon to explore our custom collections.'}
               </p>
             </div>
-            <button
-              onClick={() => setIsCreateOpen(true)}
-              className="bg-gold-premium text-black font-bold uppercase tracking-widest text-xs py-4 px-8 hover:bg-white transition-colors duration-500 rounded-none shadow-xl shadow-gold-premium/5 cursor-pointer flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" /> Create First Collection
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => setIsCreateOpen(true)}
+                className="bg-gold-premium text-black font-bold uppercase tracking-widest text-xs py-4 px-8 hover:bg-white transition-colors duration-500 rounded-none shadow-xl shadow-gold-premium/5 cursor-pointer flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Create First Collection
+              </button>
+            )}
           </div>
         ) : (
           /* Collection Workspace Layout */
@@ -155,12 +163,14 @@ export default function Collections({
                   <h3 className="text-xs uppercase tracking-widest text-white font-bold flex items-center gap-2">
                     <ImageIcon className="w-4 h-4 text-gold-premium" /> Collections ({collections.length})
                   </h3>
-                  <button
-                    onClick={() => setIsCreateOpen(true)}
-                    className="text-[10px] uppercase tracking-widest text-gold-premium hover:text-white font-bold transition-colors flex items-center gap-1 cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> Create
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => setIsCreateOpen(true)}
+                      className="text-[10px] uppercase tracking-widest text-gold-premium hover:text-white font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" /> Create
+                    </button>
+                  )}
                 </div>
 
                 <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1 no-scrollbar">
@@ -196,12 +206,14 @@ export default function Collections({
                   })}
                 </div>
 
-                <button
-                  onClick={() => setIsCreateOpen(true)}
-                  className="w-full border border-dashed border-gold-premium/45 hover:border-gold-premium bg-gold-premium/5 hover:bg-gold-premium hover:text-black text-gold-premium text-center py-3.5 font-bold uppercase tracking-widest text-xs transition-all duration-500 rounded-none cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  <Plus className="w-4 h-4" /> Create Collection
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => setIsCreateOpen(true)}
+                    className="w-full border border-dashed border-gold-premium/45 hover:border-gold-premium bg-gold-premium/5 hover:bg-gold-premium hover:text-black text-gold-premium text-center py-3.5 font-bold uppercase tracking-widest text-xs transition-all duration-500 rounded-none cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    <Plus className="w-4 h-4" /> Create Collection
+                  </button>
+                )}
               </div>
             </div>
 
@@ -223,28 +235,30 @@ export default function Collections({
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0 flex-wrap">
-                      <button
-                        onClick={() => setIsAddPhotoOpen(true)}
-                        className="bg-gold-premium text-black font-bold uppercase tracking-widest text-[10px] py-2 px-4 hover:bg-white transition-all duration-500 rounded-none shadow-md cursor-pointer flex items-center gap-1"
-                      >
-                        <Plus className="w-3.5 h-3.5" /> Add Photo
-                      </button>
-                      <button
-                        onClick={() => setIsEditOpen(true)}
-                        className="border border-white/15 hover:border-white/40 text-white font-bold uppercase tracking-widest text-[10px] py-2 px-4 hover:bg-white/5 transition-all rounded-none cursor-pointer flex items-center gap-1"
-                        title="Rename & edit details"
-                      >
-                        <Edit2 className="w-3.5 h-3.5 text-gold-premium" /> Edit
-                      </button>
-                      <button
-                        onClick={handleDeleteActive}
-                        className="border border-red-500/30 hover:border-red-500 text-red-400 hover:text-white font-bold uppercase tracking-widest text-[10px] py-2 px-4 hover:bg-red-500/10 transition-all rounded-none cursor-pointer flex items-center gap-1"
-                        title="Delete entire collection"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" /> Delete
-                      </button>
-                    </div>
+                    {isAdmin && (
+                      <div className="flex items-center gap-3 shrink-0 flex-wrap">
+                        <button
+                          onClick={() => setIsAddPhotoOpen(true)}
+                          className="bg-gold-premium text-black font-bold uppercase tracking-widest text-[10px] py-2 px-4 hover:bg-white transition-all duration-500 rounded-none shadow-md cursor-pointer flex items-center gap-1"
+                        >
+                          <Plus className="w-3.5 h-3.5" /> Add Photo
+                        </button>
+                        <button
+                          onClick={() => setIsEditOpen(true)}
+                          className="border border-white/15 hover:border-white/40 text-white font-bold uppercase tracking-widest text-[10px] py-2 px-4 hover:bg-white/5 transition-all rounded-none cursor-pointer flex items-center gap-1"
+                          title="Rename & edit details"
+                        >
+                          <Edit2 className="w-3.5 h-3.5 text-gold-premium" /> Edit
+                        </button>
+                        <button
+                          onClick={handleDeleteActive}
+                          className="border border-red-500/30 hover:border-red-500 text-red-400 hover:text-white font-bold uppercase tracking-widest text-[10px] py-2 px-4 hover:bg-red-500/10 transition-all rounded-none cursor-pointer flex items-center gap-1"
+                          title="Delete entire collection"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Active Gallery */}
@@ -262,15 +276,19 @@ export default function Collections({
                             Empty Gallery Portfolio
                           </p>
                           <p className="text-[11px] text-gray-500 font-light">
-                            Showcase this collection by adding images of furniture sets or projects.
+                            {isAdmin 
+                              ? 'Showcase this collection by adding images of furniture sets or projects.'
+                              : 'No images have been uploaded to this showroom collection yet.'}
                           </p>
                         </div>
-                        <button
-                          onClick={() => setIsAddPhotoOpen(true)}
-                          className="border border-gold-premium text-gold-premium hover:bg-gold-premium hover:text-black text-[10px] uppercase font-bold tracking-widest py-2 px-5 transition-all duration-300 rounded-none cursor-pointer"
-                        >
-                          Add First Photo
-                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={() => setIsAddPhotoOpen(true)}
+                            className="border border-gold-premium text-gold-premium hover:bg-gold-premium hover:text-black text-[10px] uppercase font-bold tracking-widest py-2 px-5 transition-all duration-300 rounded-none cursor-pointer"
+                          >
+                            Add First Photo
+                          </button>
+                        )}
                       </div>
                     ) : (
                       /* Image Grid */
@@ -297,36 +315,40 @@ export default function Collections({
 
                               {/* Hover Action Panel */}
                               <div className="absolute inset-0 bg-black/85 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3.5 z-10">
-                                <div className="flex items-center justify-between w-full">
-                                  {isCover ? (
-                                    <span className="text-[8px] text-gold-premium uppercase tracking-widest font-bold inline-flex items-center gap-0.5">
-                                      <Check className="w-3 h-3" /> Current Cover
-                                    </span>
-                                  ) : (
-                                    <button
-                                      onClick={() => onSetCoverImage(activeCategory.id, imgSrc)}
-                                      className="text-[8px] text-white hover:text-gold-premium uppercase tracking-widest font-bold inline-flex items-center gap-0.5 cursor-pointer hover:bg-white/5 px-2 py-1 transition-colors"
-                                    >
-                                      <Star className="w-2.5 h-2.5" /> Make Cover
-                                    </button>
-                                  )}
+                                {isAdmin ? (
+                                  <div className="flex items-center justify-between w-full">
+                                    {isCover ? (
+                                      <span className="text-[8px] text-gold-premium uppercase tracking-widest font-bold inline-flex items-center gap-0.5">
+                                        <Check className="w-3 h-3" /> Current Cover
+                                      </span>
+                                    ) : (
+                                      <button
+                                        onClick={() => onSetCoverImage(activeCategory.id, imgSrc)}
+                                        className="text-[8px] text-white hover:text-gold-premium uppercase tracking-widest font-bold inline-flex items-center gap-0.5 cursor-pointer hover:bg-white/5 px-2 py-1 transition-colors"
+                                      >
+                                        <Star className="w-2.5 h-2.5" /> Make Cover
+                                      </button>
+                                    )}
 
-                                  <button
-                                    onClick={() => {
-                                      if (
-                                        confirm(
-                                          'Are you sure you want to remove this photo from the collection?'
-                                        )
-                                      ) {
-                                        onDeleteImage(activeCategory.id, imgSrc);
-                                      }
-                                    }}
-                                    className="p-1 bg-black/50 hover:bg-red-600/90 text-white rounded-full border border-white/10 hover:border-transparent transition-all cursor-pointer"
-                                    title="Delete Photo"
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </button>
-                                </div>
+                                    <button
+                                      onClick={() => {
+                                        if (
+                                          confirm(
+                                            'Are you sure you want to remove this photo from the collection?'
+                                          )
+                                        ) {
+                                          onDeleteImage(activeCategory.id, imgSrc);
+                                        }
+                                      }}
+                                      className="p-1 bg-black/50 hover:bg-red-600/90 text-white rounded-full border border-white/10 hover:border-transparent transition-all cursor-pointer"
+                                      title="Delete Photo"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div /> /* Spacer to keep Zoom Preview button at the bottom */
+                                )}
 
                                 <button
                                   onClick={() => onPreviewImage(imgSrc)}
@@ -353,40 +375,44 @@ export default function Collections({
       </div>
 
       {/* MODALS */}
-      <CollectionModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onSave={handleCreateSave}
-        title="Create Collection"
-      />
+      {isAdmin && (
+        <>
+          <CollectionModal
+            isOpen={isCreateOpen}
+            onClose={() => setIsCreateOpen(false)}
+            onSave={handleCreateSave}
+            title="Create Collection"
+          />
 
-      <CollectionModal
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        onSave={handleEditSave}
-        initialData={
-          activeCategory
-            ? {
-                name: activeCategory.name,
-                subtitle: activeCategory.subtitle,
-                description: activeCategory.description,
-                mainImage: activeCategory.mainImage,
+          <CollectionModal
+            isOpen={isEditOpen}
+            onClose={() => setIsEditOpen(false)}
+            onSave={handleEditSave}
+            initialData={
+              activeCategory
+                ? {
+                    name: activeCategory.name,
+                    subtitle: activeCategory.subtitle,
+                    description: activeCategory.description,
+                    mainImage: activeCategory.mainImage,
+                  }
+                : undefined
+            }
+            title="Edit Collection Details"
+          />
+
+          <AddPhotoModal
+            isOpen={isAddPhotoOpen}
+            onClose={() => setIsAddPhotoOpen(false)}
+            onAdd={(imageUrl) => {
+              if (activeId) {
+                onAddImage(activeId, imageUrl);
               }
-            : undefined
-        }
-        title="Edit Collection Details"
-      />
-
-      <AddPhotoModal
-        isOpen={isAddPhotoOpen}
-        onClose={() => setIsAddPhotoOpen(false)}
-        onAdd={(imageUrl) => {
-          if (activeId) {
-            onAddImage(activeId, imageUrl);
-          }
-        }}
-        collectionName={activeCategory?.name || ''}
-      />
+            }}
+            collectionName={activeCategory?.name || ''}
+          />
+        </>
+      )}
     </section>
   );
 }

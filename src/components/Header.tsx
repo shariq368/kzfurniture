@@ -3,10 +3,12 @@ import { Menu, X, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
-  view: 'home' | 'collections';
+  view: 'home' | 'collections' | 'login';
+  isAdmin: boolean;
+  onLogout: () => void;
 }
 
-export default function Header({ view }: HeaderProps) {
+export default function Header({ view, isAdmin, onLogout }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -22,6 +24,8 @@ export default function Header({ view }: HeaderProps) {
     e.preventDefault();
     if (targetId === 'collections') {
       window.location.hash = '#/collections';
+    } else if (targetId === 'login') {
+      window.location.hash = '#/login';
     } else {
       window.location.hash = '#/';
       // Small delay to allow page render if switching views
@@ -95,6 +99,24 @@ export default function Header({ view }: HeaderProps) {
             >
               Contact
             </a>
+            {isAdmin ? (
+              <button
+                onClick={onLogout}
+                className="hover:text-red-400 text-gold-premium transition-colors duration-300 uppercase font-medium tracking-widest text-sm cursor-pointer"
+              >
+                Logout
+              </button>
+            ) : (
+              <a
+                href="#/login"
+                onClick={(e) => handleNavClick(e, 'login')}
+                className={`hover:text-gold-premium transition-colors duration-300 uppercase font-medium ${
+                  view === 'login' ? 'text-gold-premium font-bold' : ''
+                }`}
+              >
+                Admin
+              </a>
+            )}
           </nav>
 
           {/* Showroom Callout Button */}
@@ -182,6 +204,27 @@ export default function Header({ view }: HeaderProps) {
               >
                 Contact
               </a>
+              {isAdmin ? (
+                <button
+                  onClick={() => {
+                    onLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="hover:text-red-400 text-gold-premium transition-colors text-2xl font-serif-luxury cursor-pointer"
+                >
+                  Logout
+                </button>
+              ) : (
+                <a
+                  href="#/login"
+                  onClick={(e) => handleNavClick(e, 'login')}
+                  className={`hover:text-gold-premium transition-colors ${
+                    view === 'login' ? 'text-gold-premium font-bold' : ''
+                  }`}
+                >
+                  Admin
+                </a>
+              )}
             </nav>
 
             <a
